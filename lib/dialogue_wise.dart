@@ -14,7 +14,7 @@ class DialogueWiseService {
   
   getDialogue(DialogueWiseRequest request) async {
     var currentUtc = new DateFormat('dd/MM/y hh:mm:ss a').format(new DateTime.now().toUtc());
-    var isPilotFlag = request.isPilot?'&isPilotVersion=true' : '';
+    var isPilotFlag = request.isPilot!=null && request.isPilot?'&isPilotVersion=true' : '';
     var pageFlag = '';
 
     if((request.pageSize==null && request.pageIndex!=null)||
@@ -27,7 +27,7 @@ class DialogueWiseService {
       pageFlag = '&pageSize=' + request.pageSize.toString() + '&pageIndex=' + request.pageIndex.toString();
     }
 
-    var apiUrl = this.apiBaseUrl + 'dialogue/getdialogue?dialogueName=' + request.dialogueName + isPilotFlag + pageFlag;
+    var apiUrl = this.apiBaseUrl + 'dialogue/getdialogue?dialogueName=' + request.slug + isPilotFlag + pageFlag;
     var message = '/api/dialogue/getdialogue:' + currentUtc;
     // hash message
     var key = utf8.encode(request.apiKey);
@@ -59,7 +59,7 @@ class DialogueWiseService {
 }
 
 class DialogueWiseRequest{
-  String dialogueName;
+  String slug;
   bool isPilot;
   String apiKey;
   String emailHash;
