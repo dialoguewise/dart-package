@@ -2,9 +2,9 @@ name: dialogue_wise
 description: Dialogue Wise is a headless CMS. This is the client for any of your dart or flutter applications. 
 homepage: https://dialoguewise.com/
 repository: https://github.com/dialoguewise/dart-package
-version: 0.1.1
+version: 0.1.4
 dependencies:
   intl: ^0.16.1
   crypto: ^2.1.5
 environment:
-    sdk: ">=1.8.0 <=2.8.3"
+    sdk: ">=1.8.0 <3.0.0"
