@@ -1,4 +1,8 @@
 .dart_tool/
 .packages
 build/
+
+# Coverage
+coverage/
+test/.test_coverage.dart
 steps.txt
