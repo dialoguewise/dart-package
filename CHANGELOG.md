@@ -1,3 +1,6 @@
+# 0.1.5
+Added search and image transformation options.
+
 # 0.1.4
 Formatted files.
 

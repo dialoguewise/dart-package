@@ -19,6 +19,7 @@ class DialogueWiseService {
         ? '&isPilotVersion=true'
         : '';
     var pageFlag = '';
+    var imageTransParam = '';
 
     if ((request.pageSize == null && request.pageIndex != null) ||
         (request.pageSize != null && request.pageIndex == null)) {
@@ -31,12 +32,76 @@ class DialogueWiseService {
           request.pageIndex.toString();
     }
 
+    if(request.imageTransformation!=null && !request.imageTransformation.isEmpty)
+    {
+      imageTransParam = '&imageTransformation=' + request.imageTransformation;
+    }
+
     var apiUrl = this.apiBaseUrl +
         'dialogue/getdialogue?dialogueName=' +
         request.slug +
         isPilotFlag +
-        pageFlag;
+        pageFlag +
+        imageTransParam;
     var message = '/api/dialogue/getdialogue:' + currentUtc;
+    // hash message
+    var key = utf8.encode(request.apiKey);
+    var bytes = utf8.encode(message);
+    var hmacSha256 = Hmac(sha256, key);
+    var digest = hmacSha256.convert(bytes);
+    String hashMessage = base64.encode(digest.bytes);
+    Map<String, dynamic> data = request.variableList;
+
+    var authentication = request.emailHash + ':' + hashMessage;
+
+    HttpClientRequest clientRequest =
+        await this.httpClient.postUrl(Uri.parse(apiUrl));
+    clientRequest.headers.add('Access-Control-Allow-origin', '*');
+    clientRequest.headers.add('Access-Control-Allow-Methods', '*');
+    clientRequest.headers.add('Access-Control-Allow-Headers',
+        'Content-Type, Timestamp, Authentication');
+    clientRequest.headers
+        .add(HttpHeaders.contentTypeHeader, 'application/json');
+    clientRequest.headers.add('Authentication', authentication);
+    clientRequest.headers.add('Timestamp', currentUtc);
+    // add data to request
+    if (data != null && data.isNotEmpty) {
+      clientRequest.write(jsonEncode(data));
+    }
+    HttpClientResponse response = await clientRequest.close();
+    String responseBody = await response.transform(utf8.decoder).join();
+    Map jsonResponse = jsonDecode(responseBody) as Map;
+    this.httpClient.close();
+    return jsonResponse;
+  }
+
+  searchDialogue(DialogueWiseRequest request) async {
+    var currentUtc =
+        DateFormat('dd/MM/y hh:mm:ss a').format(DateTime.now().toUtc());
+    //The Pilot flag allows you to get the piloted content. Allows you to test your content.
+    var isPilotFlag = request.isPilot != null && request.isPilot
+        ? '&isPilotVersion=true'
+        : '';
+    var imageTransParam = '';
+    var searchKeyword = '';
+
+    if(request.imageTransformation!=null && !request.imageTransformation.isEmpty)
+    {
+      imageTransParam = '&imageTransformation=' + request.imageTransformation;
+    }
+
+    if(request.searchKeyword!=null && !request.searchKeyword.isEmpty)
+    {
+      searchKeyword = '&keyword=' + request.searchKeyword;
+    }
+
+    var apiUrl = this.apiBaseUrl +
+        'dialogue/searchdialogue?dialogueName=' +
+        request.slug +
+        isPilotFlag +
+        imageTransParam + 
+        searchKeyword;
+    var message = '/api/dialogue/searchdialogue:' + currentUtc;
     // hash message
     var key = utf8.encode(request.apiKey);
     var bytes = utf8.encode(message);
@@ -77,4 +142,6 @@ class DialogueWiseRequest {
   Map<String, dynamic> variableList;
   int pageSize;
   int pageIndex;
+  String searchKeyword;
+  String imageTransformation;
 }
