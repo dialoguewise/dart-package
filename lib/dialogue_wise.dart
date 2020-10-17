@@ -1,13 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:crypto/crypto.dart';
 
 class DialogueWiseService {
-  HttpClient httpClient;
+  http.Client httpClient;
   String apiBaseUrl = 'https://api.dialoguewise.com/api/';
 
-  DialogueWiseService(HttpClient httpClient) {
+  DialogueWiseService(http.Client httpClient) {
     this.httpClient = httpClient;
   }
 
@@ -32,8 +32,8 @@ class DialogueWiseService {
           request.pageIndex.toString();
     }
 
-    if(request.imageTransformation!=null && !request.imageTransformation.isEmpty)
-    {
+    if (request.imageTransformation != null &&
+        !request.imageTransformation.isEmpty) {
       imageTransParam = '&imageTransformation=' + request.imageTransformation;
     }
 
@@ -54,22 +54,20 @@ class DialogueWiseService {
 
     var authentication = request.emailHash + ':' + hashMessage;
 
-    HttpClientRequest clientRequest =
-        await this.httpClient.postUrl(Uri.parse(apiUrl));
-    clientRequest.headers.add('Access-Control-Allow-origin', '*');
-    clientRequest.headers.add('Access-Control-Allow-Methods', '*');
-    clientRequest.headers.add('Access-Control-Allow-Headers',
-        'Content-Type, Timestamp, Authentication');
-    clientRequest.headers
-        .add(HttpHeaders.contentTypeHeader, 'application/json');
-    clientRequest.headers.add('Authentication', authentication);
-    clientRequest.headers.add('Timestamp', currentUtc);
+    http.Request clientRequest = new http.Request('POST', Uri.parse(apiUrl));
+    clientRequest.headers['Access-Control-Allow-origin'] = '*';
+    clientRequest.headers['Access-Control-Allow-Methods'] = '*';
+    clientRequest.headers['Access-Control-Allow-Headers'] =
+        'Content-Type, Timestamp, Authentication';
+    clientRequest.headers['Content-Type'] = 'application/json';
+    clientRequest.headers['Authentication'] = authentication;
+    clientRequest.headers['Timestamp'] = currentUtc;
     // add data to request
     if (data != null && data.isNotEmpty) {
-      clientRequest.write(jsonEncode(data));
+      clientRequest.body = jsonEncode(data);
     }
-    HttpClientResponse response = await clientRequest.close();
-    String responseBody = await response.transform(utf8.decoder).join();
+    http.StreamedResponse response = await httpClient.send(clientRequest);
+    String responseBody = await response.stream.bytesToString();
     Map jsonResponse = jsonDecode(responseBody) as Map;
     this.httpClient.close();
     return jsonResponse;
@@ -85,13 +83,12 @@ class DialogueWiseService {
     var imageTransParam = '';
     var searchKeyword = '';
 
-    if(request.imageTransformation!=null && !request.imageTransformation.isEmpty)
-    {
+    if (request.imageTransformation != null &&
+        !request.imageTransformation.isEmpty) {
       imageTransParam = '&imageTransformation=' + request.imageTransformation;
     }
 
-    if(request.searchKeyword!=null && !request.searchKeyword.isEmpty)
-    {
+    if (request.searchKeyword != null && !request.searchKeyword.isEmpty) {
       searchKeyword = '&keyword=' + request.searchKeyword;
     }
 
@@ -99,7 +96,7 @@ class DialogueWiseService {
         'dialogue/searchdialogue?dialogueName=' +
         request.slug +
         isPilotFlag +
-        imageTransParam + 
+        imageTransParam +
         searchKeyword;
     var message = '/api/dialogue/searchdialogue:' + currentUtc;
     // hash message
@@ -112,22 +109,20 @@ class DialogueWiseService {
 
     var authentication = request.emailHash + ':' + hashMessage;
 
-    HttpClientRequest clientRequest =
-        await this.httpClient.postUrl(Uri.parse(apiUrl));
-    clientRequest.headers.add('Access-Control-Allow-origin', '*');
-    clientRequest.headers.add('Access-Control-Allow-Methods', '*');
-    clientRequest.headers.add('Access-Control-Allow-Headers',
-        'Content-Type, Timestamp, Authentication');
-    clientRequest.headers
-        .add(HttpHeaders.contentTypeHeader, 'application/json');
-    clientRequest.headers.add('Authentication', authentication);
-    clientRequest.headers.add('Timestamp', currentUtc);
+    http.Request clientRequest = new http.Request('POST', Uri.parse(apiUrl));
+    clientRequest.headers['Access-Control-Allow-origin'] = '*';
+    clientRequest.headers['Access-Control-Allow-Methods'] = '*';
+    clientRequest.headers['Access-Control-Allow-Headers'] =
+        'Content-Type, Timestamp, Authentication';
+    clientRequest.headers['Content-Type'] = 'application/json';
+    clientRequest.headers['Authentication'] = authentication;
+    clientRequest.headers['Timestamp'] = currentUtc;
     // add data to request
     if (data != null && data.isNotEmpty) {
-      clientRequest.write(jsonEncode(data));
+      clientRequest.body = jsonEncode(data);
     }
-    HttpClientResponse response = await clientRequest.close();
-    String responseBody = await response.transform(utf8.decoder).join();
+    http.StreamedResponse response = await httpClient.send(clientRequest);
+    String responseBody = await response.stream.bytesToString();
     Map jsonResponse = jsonDecode(responseBody) as Map;
     this.httpClient.close();
     return jsonResponse;

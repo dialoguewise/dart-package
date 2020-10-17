@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 
-import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:dialogue_wise/dialogue_wise.dart';
 
 void main() {
@@ -8,13 +8,13 @@ void main() {
     var request = new DialogueWiseRequest();
     request.slug = 'hero-section';
     request.apiKey = 'b1266377591c4f2a9494c3abdd2cac5381D6Z825D26CEBAE8B6rn';
-    request.emailHash='/kgmM46s1xC56BOFWRZp4j+0bdU19URpXdNT9liAX50=';
+    request.emailHash = '/kgmM46s1xC56BOFWRZp4j+0bdU19URpXdNT9liAX50=';
 
     // Call the Dialogue Wise API
-    var dialogueWiseService = new DialogueWiseService(new HttpClient()); 
+    var dialogueWiseService = new DialogueWiseService(new http.Client());
     Map res = await dialogueWiseService.getDialogue(request);
-    
-    expect(res['totalRecords'], equals(2));
+
+    expect(res['totalRecords'], equals(1));
     expect(res['error'], equals(''));
   });
 }

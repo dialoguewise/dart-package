@@ -1,3 +1,9 @@
+# 0.1.7
+Updated ReadMe file.
+
+# 0.1.6
+Added support for Flutter Web
+
 # 0.1.5
 Added search and image transformation options.
 

@@ -22,7 +22,7 @@ request.slug = '[Your Slug]';
 request.apiKey = '[Your API Key]';
 request.emailHash='[Your Email Hash]';
 
-var dialogueWiseService = new DialogueWiseService(new HttpClient()); 
+var dialogueWiseService = new DialogueWiseService(new http.Client()); 
 Map res = await dialogueWiseService.getDialogue(request);
 ```
 
@@ -46,7 +46,7 @@ request.apiKey = '[Your API Key]';
 request.emailHash = '[Your Email Hash]';
 request.searchKeyword = '[Your Search Keyword]';
 
-var dialogueWiseService = new DialogueWiseService(new HttpClient()); 
+var dialogueWiseService = new DialogueWiseService(http.Client()); 
 Map res = await dialogueWiseService.searchDialogue(request);
 ```
 
