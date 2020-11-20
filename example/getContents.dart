@@ -1,15 +1,15 @@
-import 'package:dialogue_wise/dialogue_wise.dart';
-import 'package:dialogue_wise/search_contents_request.dart';
 import 'dart:convert';
+
+import 'package:dialogue_wise/dialogue_wise.dart';
+import 'package:dialogue_wise/get_contents_request.dart';
 void main() async {
 //Prepare the payload
-  var request = new SearchContentsRequest();
+  var request = new GetContentsRequest();
   request.slug = 'my-fab-food-store';
   request.apiKey = '[API Key]';
   request.emailHash = '[Email Hash]';
-  request.keyword = 'ken';
+  request.imageTransformation = 'mask=ellipse';
   request.isPilot=true;
-  request.imageTransformation='SDFSDFS';
   request.variables = new Map<String, dynamic>();
   request.variables ={
     "@testVar":"test var val",
@@ -17,7 +17,7 @@ void main() async {
   };
 // Call the Dialogue Wise API
   var dialogueWiseService = new DialogueWiseService();
-  var res = await dialogueWiseService.searchContents(request);
+  var res = await dialogueWiseService.getContents(request);
 
 //Print the Output to Console
   print(jsonEncode(res));

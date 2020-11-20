@@ -1,3 +1,7 @@
+# 2.0.0
+* This version includes lots of features from managing content to deploying it.
+* Dart SDK constraint to >=2.6.0 <3.0.0
+
 # 0.1.7
 Updated ReadMe file.
 

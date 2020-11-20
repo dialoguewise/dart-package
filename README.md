@@ -12,41 +12,6 @@ You will need Dart installed on your machine.
 You can install it from [here](https://dart.dev/get-dart).
 
 
-## Get content from Dialogue Wise
-
-Getting content is pretty simple. All you need to do is to create a DialogueWiseRequest and then call the getDialogue method.
-
-```
-var request = new DialogueWiseRequest();
-request.slug = '[Your Slug]';
-request.apiKey = '[Your API Key]';
-request.emailHash='[Your Email Hash]';
-
-var dialogueWiseService = new DialogueWiseService(new http.Client()); 
-Map res = await dialogueWiseService.getDialogue(request);
-```
-
-You can also do image transformations like resize, crop or rotate by setting the `imageTransformation` parameter in the request. For example:
-
-```
-request.imageTransformation='w=300';
-```
-
-will set the image width as 300. Please checkout the [Docs](https://docs.dialoguewise.com/) for more details on image transformations.
-
-
-## Search content
-
-The search option will return you all the content that contains the matching keyword. You just need to pass the keyword as part of the DialogueWiseRequest and then call the searchDialogue method.
-
-```
-var request = new DialogueWiseRequest();
-request.slug = '[Your Slug]';
-request.apiKey = '[Your API Key]';
-request.emailHash = '[Your Email Hash]';
-request.searchKeyword = '[Your Search Keyword]';
-
-var dialogueWiseService = new DialogueWiseService(http.Client()); 
-Map res = await dialogueWiseService.searchDialogue(request);
-```
+## Integration and managing your content
+Please check out our [documentation](https://docs.dialoguewise.com/manage-content/sdk/flutter-dart/) for more details.
 
