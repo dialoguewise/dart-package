@@ -1,3 +1,6 @@
+# 3.0.0
+* Supports the new Dialoguewise version.
+
 # 2.0.0
 * This version includes lots of features from managing content to deploying it.
 * Dart SDK constraint to >=2.6.0 <3.0.0

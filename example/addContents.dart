@@ -1,57 +1,34 @@
-import 'package:dialogue_wise/dialogue_wise.dart';
-import 'package:dialogue_wise/add_contents_request.dart';
-import 'package:dialogue_wise/content.dart';
+import 'package:dialogue_wise/dialoguewise.dart';
+import 'package:dialogue_wise/DTOs/add_contents_request.dart';
+import 'package:dialogue_wise/enums/device.dart';
+import 'package:dialogue_wise/models/content.dart';
+import 'package:dialogue_wise/models/content.metadata.dart';
 import 'dart:convert';
+
+import 'package:dialogue_wise/models/field.dart';
+
 void main() async {
-
-
-
   var request = new AddContentsRequest();
-  request.slug = 'my-fab-food-store';
-  request.apiKey = '[API Key]';
-  request.emailHash = '[Email Hash]';
-
-  var fieldList = new List<Field>();
+  request.slug = '<Provide Slug>';
+  request.accessToken = '<Provide access token>';
+  request.source = '<Provide a source name>';
+  List<Field> fieldList = [];
   var field = new Field();
-  field.name='name';
-  field.value='My name';
+  field.name = '<Provide field name>';
+  field.value = '<Provide field value>';
   fieldList.add(field);
 
-  field = new Field();
-  field.name='desc';
-  field.value='this is the description';
-  fieldList.add(field);
-
-  field = new Field();
-  field.name='title';
-  field.value='this is the title';
-  fieldList.add(field);
-
-  field = new Field();
-  field.name='dob';
-  field.value='10/11/2020';
-  fieldList.add(field);
-
-  field = new Field();
-  field.name='has-photo';
-  field.value='true';
-  fieldList.add(field);
-  
-  var contentList = new List<Content>();
+  List<Content> contentList = [];
   var content = new Content();
-  content.fields=fieldList;
-  content.country=Country.United_Arab_Emirates;
-  content.deviceType=Device.Desktop;
-  content.sentimentType=Sentiment.Positive;
-
+  content.fields = fieldList;
+  content.metadata = new ContentMetadata();
+  content.metadata.deviceType = Device.SmartWatch;
   contentList.add(content);
+  request.contents = contentList;
 
-  request.contents=contentList;
-
-  var dialogueWiseService = new DialogueWiseService();
+  var dialogueWiseService = new DialoguewiseService();
   var res = await dialogueWiseService.addContents(request);
 
 //Print the Output to Console
   print(jsonEncode(res));
-
 }

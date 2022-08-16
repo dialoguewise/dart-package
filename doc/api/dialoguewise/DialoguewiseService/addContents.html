@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the addContents method from the DialoguewiseService class, for the Dart programming language.">
+  <title>addContents method - DialoguewiseService class - dialoguewise library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">dialogue_wise</a></li>
+    <li><a href="../../dialoguewise/dialoguewise-library.html">dialoguewise</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService-class.html">DialoguewiseService</a></li>
+    <li class="self-crumb">addContents method</li>
+  </ol>
+  <div class="self-name">addContents</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">addContents</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype">dynamic</span>
+<span class="name ">addContents</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addContents-param-request"><span class="type-annotation"><a href="../../DTOs_add_contents_request/AddContentsRequest-class.html">AddContentsRequest</a></span> <span class="parameter-name">request</span></span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Adds content to a dialogue.
+Takes <code>request</code> of type AddContentsRequest.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">addContents(AddContentsRequest request) async {
+  if (request == null) {
+    throw FormatException(&quot;Please provide a payload.&quot;);
+  } else if (request.slug == null || request.slug.isEmpty) {
+    throw FormatException(&quot;Please provide a Slug.&quot;);
+  } else if (request.accessToken == null || request.accessToken.isEmpty) {
+    throw FormatException(&quot;Please provide the access token.&quot;);
+  } else if (request.contents == null || request.contents.isEmpty) {
+    throw FormatException(&quot;Please provide the contents to be added.&quot;);
+  } else if (request.source == null || request.source.isEmpty) {
+    throw FormatException(&quot;Please provide a source name.&quot;);
+  }
+
+  http.Request clientRequest =
+      _getHeader(request.accessToken, &#39;dialogue&#47;addcontents&#39;);
+  clientRequest.body = jsonEncode(request);
+
+  return _getResponse(clientRequest);
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">dialogue_wise</a></li>
+  <li><a href="../../dialoguewise/dialoguewise-library.html">dialoguewise</a></li>
+  <li><a href="../../dialoguewise/DialoguewiseService-class.html">DialoguewiseService</a></li>
+  <li class="self-crumb">addContents method</li>
+</ol>
+
+
+    <h5>DialoguewiseService class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../dialoguewise/DialoguewiseService-class.html#constructors">Constructors</a></li>
+          <li><a href="../../dialoguewise/DialoguewiseService/DialoguewiseService.html">DialoguewiseService</a></li>
+
+
+    <li class="section-title">
+      <a href="../../dialoguewise/DialoguewiseService-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../../dialoguewise/DialoguewiseService/apiBaseUrl.html">apiBaseUrl</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.6/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.6/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../dialoguewise/DialoguewiseService-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService/addContents.html">addContents</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService/deleteContent.html">deleteContent</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService/getContents.html">getContents</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService/getDialogues.html">getDialogues</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService/getVariables.html">getVariables</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.6/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService/searchContents.html">searchContents</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.6/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService/updateContent.html">updateContent</a></li>
+    <li><a href="../../dialoguewise/DialoguewiseService/uploadMedia.html">uploadMedia</a></li>
+
+    <li class="section-title inherited"><a href="../../dialoguewise/DialoguewiseService-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.dart.dev/stable/2.17.6/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    dialogue_wise
+      3.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
