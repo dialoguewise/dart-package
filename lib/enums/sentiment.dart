@@ -2,7 +2,7 @@
 enum Sentiment { Any, Positive, Neutral, Negative }
 
 extension SentimentType on Sentiment {
-  String get Type {
+  String get type {
     switch (this) {
       case Sentiment.Positive:
         return "Positive";
@@ -11,7 +11,7 @@ extension SentimentType on Sentiment {
       case Sentiment.Negative:
         return "Negative";
       default:
-        return null;
+        return "";
     }
   }
 }

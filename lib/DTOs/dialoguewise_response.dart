@@ -1,13 +1,13 @@
 ///Creates a DialogueWiseResponse response object that would contain the response from Dialoguewise.
 class DialoguewiseResponse {
   ///Indicates the HTTP status code
-  int statusCode;
+  int statusCode = 0;
 
   ///Indicates the reason phrase of the HTTP status
-  String reasonPhrase;
+  String reasonPhrase = '';
 
   ///Contains the response from Dialoguewise
-  Map response;
+  Map response = new Map();
 
   Map<String, dynamic> toJson() => {
         'statusCode': statusCode,

@@ -22,7 +22,7 @@ void main() async {
   var content = new Content();
   content.fields = fieldList;
   content.metadata = new ContentMetadata();
-  content.metadata.deviceType = Device.SmartWatch;
+  content.metadata!.deviceType = Device.SmartWatch;
   contentList.add(content);
   request.contents = contentList;
 

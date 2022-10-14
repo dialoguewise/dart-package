@@ -10,7 +10,7 @@ enum Device {
 }
 
 extension DeviceType on Device {
-  String get Name {
+  String get name {
     switch (this) {
       case Device.Desktop:
         return "Desktop";
@@ -25,7 +25,7 @@ extension DeviceType on Device {
       case Device.IoT:
         return "IoT";
       default:
-        return null;
+        return "";
     }
   }
 }

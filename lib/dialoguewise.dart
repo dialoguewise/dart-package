@@ -12,22 +12,22 @@ import 'dart:io';
 
 ///Allows you to manage your content using Dialoguewise Headless CMS
 class DialoguewiseService {
-  String _apiBaseUrl;
+  String _apiBaseUrl = '';
 
-  DialoguewiseService({String apiBaseUrl = null}) {
-    if (apiBaseUrl != null && !apiBaseUrl.isEmpty) {
+  DialoguewiseService({String? apiBaseUrl = null}) {
+    if (apiBaseUrl != null && apiBaseUrl.isNotEmpty) {
       this._apiBaseUrl = (apiBaseUrl[apiBaseUrl.length - 1] != '/'
               ? (apiBaseUrl + "/")
               : apiBaseUrl) +
           "api/";
       ;
     } else {
-      this._apiBaseUrl = null;
+      this._apiBaseUrl = '';
     }
   }
 
   String get apiBaseUrl {
-    if (_apiBaseUrl == null) {
+    if (_apiBaseUrl.isEmpty) {
       return 'https://api.dialoguewise.com/api/';
     }
 
@@ -37,7 +37,7 @@ class DialoguewiseService {
   ///Gets all the published Dialogues in a project.
   ///Takes parameter [accessToken] of type String as access token.
   getDialogues(String accessToken) async {
-    if (accessToken == null || accessToken.isEmpty) {
+    if (accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
     }
 
@@ -50,9 +50,9 @@ class DialoguewiseService {
   ///Gets all the Variables of a published Dialogue.
   ///Takes parameter [request] of type GetVariablesRequest.
   getVariables(GetVariablesRequest request) async {
-    if (request.accessToken == null || request.accessToken.isEmpty) {
+    if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
-    } else if (request.slug == null || request.accessToken.isEmpty) {
+    } else if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the Slug.");
     }
 
@@ -66,11 +66,9 @@ class DialoguewiseService {
   ///Gets all the contents in a dialogue.
   ///Takes parameter [request] of type GetContentsRequest.
   getContents(GetContentsRequest request) async {
-    if (request == null) {
-      throw FormatException("Please provide a payload.");
-    } else if (request.slug == null || request.slug.isEmpty) {
+    if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken == null || request.accessToken.isEmpty) {
+    } else if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
     } else if ((request.pageSize == null && request.pageIndex != null) ||
         (request.pageSize != null && request.pageIndex == null)) {
@@ -87,11 +85,9 @@ class DialoguewiseService {
   ///Gets all the contents in a dialogue that matches the search keyword.
   ///Takes [request] of type SearchContentsRequest.
   searchContents(SearchContentsRequest request) async {
-    if (request == null) {
-      throw FormatException("Please provide a payload.");
-    } else if (request.slug == null || request.slug.isEmpty) {
+    if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken == null || request.accessToken.isEmpty) {
+    } else if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
     }
 
@@ -105,15 +101,13 @@ class DialoguewiseService {
   ///Adds content to a dialogue.
   ///Takes [request] of type AddContentsRequest.
   addContents(AddContentsRequest request) async {
-    if (request == null) {
-      throw FormatException("Please provide a payload.");
-    } else if (request.slug == null || request.slug.isEmpty) {
+    if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken == null || request.accessToken.isEmpty) {
+    } else if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
-    } else if (request.contents == null || request.contents.isEmpty) {
+    } else if (request.contents.isEmpty) {
       throw FormatException("Please provide the contents to be added.");
-    } else if (request.source == null || request.source.isEmpty) {
+    } else if (request.source.isEmpty) {
       throw FormatException("Please provide a source name.");
     }
 
@@ -127,17 +121,15 @@ class DialoguewiseService {
   ///Update exisitng content.
   ///Takes [request] of type UpdateContentRequest.
   updateContent(UpdateContentRequest request) async {
-    if (request == null) {
-      throw FormatException("Please provide a payload.");
-    } else if (request.slug == null || request.slug.isEmpty) {
+    if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken == null || request.accessToken.isEmpty) {
+    } else if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
-    } else if (request.content == null || request.content.fields.isEmpty) {
+    } else if (request.content.fields.isEmpty) {
       throw FormatException("Please provide the contents to be added.");
-    } else if (request.content.id == null || request.content.id.isEmpty) {
+    } else if (request.content.id == null || request.content.id!.isEmpty) {
       throw FormatException("Please provide content id.");
-    } else if (request.source == null || request.source.isEmpty) {
+    } else if (request.source.isEmpty) {
       throw FormatException("Please provide a source name.");
     }
 
@@ -151,15 +143,13 @@ class DialoguewiseService {
   ///Delete exisitng content.
   ///Takes [request] of type DeleteContentRequest.
   deleteContent(DeleteContentRequest request) async {
-    if (request == null) {
-      throw FormatException("Please provide a payload.");
-    } else if (request.slug == null || request.slug.isEmpty) {
+    if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken == null || request.accessToken.isEmpty) {
+    } else if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
-    } else if (request.contentId == null || request.contentId.isEmpty) {
+    } else if (request.contentId.isEmpty) {
       throw FormatException("Please provide the content id.");
-    } else if (request.source == null || request.source.isEmpty) {
+    } else if (request.source.isEmpty) {
       throw FormatException("Please provide a source name.");
     }
 
@@ -173,11 +163,9 @@ class DialoguewiseService {
   ///Uploads an image or file and returns the file URL.
   ///Takes [request] of type UploadMediaRequest.
   uploadMedia(UploadMediaRequest request) async {
-    if (request == null) {
-      throw FormatException("Please provide a payload.");
-    } else if (request.accessToken == null || request.accessToken.isEmpty) {
+    if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
-    } else if (request.localFilePath == null || request.localFilePath.isEmpty) {
+    } else if (request.localFilePath.isEmpty) {
       throw FormatException(
           "Please provide the local path of file to be uploaded.");
     } else if (FileSystemEntity.typeSync(request.localFilePath) ==
@@ -198,9 +186,9 @@ class DialoguewiseService {
     var response = await httpRequest.send();
     var dialogueWiseResponse = new DialoguewiseResponse();
     dialogueWiseResponse.statusCode = response.statusCode;
-    dialogueWiseResponse.reasonPhrase = response.reasonPhrase;
+    dialogueWiseResponse.reasonPhrase = response.reasonPhrase!;
     var responseBody = await response.stream.bytesToString();
-    if (responseBody != null && responseBody.isNotEmpty) {
+    if (responseBody.isNotEmpty) {
       dialogueWiseResponse.response = jsonDecode(responseBody) as Map;
     }
 
@@ -215,9 +203,9 @@ class DialoguewiseService {
 
     var dialogueWiseResponse = new DialoguewiseResponse();
     dialogueWiseResponse.statusCode = response.statusCode;
-    dialogueWiseResponse.reasonPhrase = response.reasonPhrase;
+    dialogueWiseResponse.reasonPhrase = response.reasonPhrase!;
 
-    if (responseBody != null && responseBody.isNotEmpty) {
+    if (responseBody.isNotEmpty) {
       try {
         dialogueWiseResponse.response = jsonDecode(responseBody) as Map;
       } catch (e) {

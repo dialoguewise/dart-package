@@ -1,7 +1,7 @@
 ///Field model class.
 class Field {
-  String name;
-  String value;
+  late String name;
+  late String value;
 
   Map<String, dynamic> toJson() => {'name': name, 'value': value};
 }

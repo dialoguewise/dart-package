@@ -24,7 +24,7 @@ void main() async {
   request.source = "<Provide a source name>";
 
   content.metadata = new ContentMetadata();
-  content.metadata.deviceType = Device.Mobile;
+  content.metadata!.deviceType = Device.Mobile;
   request.content = content;
 
   var dialogueWiseService = new DialoguewiseService();

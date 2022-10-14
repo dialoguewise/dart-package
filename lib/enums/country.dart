@@ -244,7 +244,7 @@ enum Country {
 }
 
 extension CountryCode on Country {
-  String get Code {
+  String get code {
     switch (this) {
       case Country.Afghanistan:
         return "AF";
@@ -727,7 +727,7 @@ extension CountryCode on Country {
       case Country.Zimbabwe:
         return "ZW";
       default:
-        return null;
+        return "";
     }
   }
 }
