@@ -1,28 +1,27 @@
 import 'dart:convert';
-import 'package:dialogue_wise/DTOs/get_variables_request.dart';
-import 'package:http/http.dart' as http;
-import 'package:dialogue_wise/DTOs/search_contents_request.dart';
+import 'dart:io';
+
 import 'package:dialogue_wise/DTOs/add_contents_request.dart';
-import 'package:dialogue_wise/DTOs/update_content_request.dart';
-import 'package:dialogue_wise/DTOs/get_contents_request.dart';
-import 'package:dialogue_wise/DTOs/upload_media_request.dart';
 import 'package:dialogue_wise/DTOs/delete_content_request.dart';
 import 'package:dialogue_wise/DTOs/dialoguewise_response.dart';
-import 'dart:io';
+import 'package:dialogue_wise/DTOs/get_contents_request.dart';
+import 'package:dialogue_wise/DTOs/get_variables_request.dart';
+import 'package:dialogue_wise/DTOs/search_contents_request.dart';
+import 'package:dialogue_wise/DTOs/update_content_request.dart';
+import 'package:dialogue_wise/DTOs/upload_media_request.dart';
+import 'package:http/http.dart' as http;
 
 ///Allows you to manage your content using Dialoguewise Headless CMS
 class DialoguewiseService {
   String _apiBaseUrl = '';
 
+  // ignore: avoid_init_to_null
   DialoguewiseService({String? apiBaseUrl = null}) {
     if (apiBaseUrl != null && apiBaseUrl.isNotEmpty) {
-      this._apiBaseUrl = (apiBaseUrl[apiBaseUrl.length - 1] != '/'
-              ? (apiBaseUrl + "/")
-              : apiBaseUrl) +
-          "api/";
-      ;
+      _apiBaseUrl =
+          "${apiBaseUrl[apiBaseUrl.length - 1] != '/' ? ("$apiBaseUrl/") : apiBaseUrl}api/";
     } else {
-      this._apiBaseUrl = '';
+      _apiBaseUrl = '';
     }
   }
 
@@ -57,7 +56,7 @@ class DialoguewiseService {
     }
 
     http.Request clientRequest = _getHeader(
-        request.accessToken, 'dialogue/getVariables?slug=' + request.slug,
+        request.accessToken, 'dialogue/getVariables?slug=${request.slug}',
         isGet: true);
 
     return _getResponse(clientRequest);
@@ -170,11 +169,10 @@ class DialoguewiseService {
           "Please provide the local path of file to be uploaded.");
     } else if (FileSystemEntity.typeSync(request.localFilePath) ==
         FileSystemEntityType.notFound) {
-      throw FormatException(
-          "Unable to find file " + request.localFilePath + ".");
+      throw FormatException("Unable to find file ${request.localFilePath}.");
     }
 
-    var apiUrl = this.apiBaseUrl + 'dialogue/uploadmedia';
+    var apiUrl = '${apiBaseUrl}dialogue/uploadmedia';
     var uri = Uri.parse(apiUrl);
     var httpRequest = http.MultipartRequest('POST', uri)
       ..headers['Access-Control-Allow-origin'] = '*'
@@ -184,7 +182,7 @@ class DialoguewiseService {
       ..files.add(
           await http.MultipartFile.fromPath('file', request.localFilePath));
     var response = await httpRequest.send();
-    var dialogueWiseResponse = new DialoguewiseResponse();
+    var dialogueWiseResponse = DialoguewiseResponse();
     dialogueWiseResponse.statusCode = response.statusCode;
     dialogueWiseResponse.reasonPhrase = response.reasonPhrase!;
     var responseBody = await response.stream.bytesToString();
@@ -196,12 +194,12 @@ class DialoguewiseService {
   }
 
   _getResponse(http.Request clientRequest) async {
-    http.Client _httpClient = new http.Client();
-    http.StreamedResponse response = await _httpClient.send(clientRequest);
+    http.Client httpClient = http.Client();
+    http.StreamedResponse response = await httpClient.send(clientRequest);
     String responseBody = await response.stream.bytesToString();
-    _httpClient.close();
+    httpClient.close();
 
-    var dialogueWiseResponse = new DialoguewiseResponse();
+    var dialogueWiseResponse = DialoguewiseResponse();
     dialogueWiseResponse.statusCode = response.statusCode;
     dialogueWiseResponse.reasonPhrase = response.reasonPhrase!;
 
@@ -218,9 +216,9 @@ class DialoguewiseService {
   }
 
   _getHeader(String accessToken, String apiRoute, {bool isGet = false}) {
-    var apiUrl = this.apiBaseUrl + apiRoute;
+    var apiUrl = apiBaseUrl + apiRoute;
     http.Request clientRequest =
-        new http.Request(isGet ? 'GET' : 'POST', Uri.parse(apiUrl));
+        http.Request(isGet ? 'GET' : 'POST', Uri.parse(apiUrl));
     clientRequest.headers['Access-Control-Allow-origin'] = '*';
     clientRequest.headers['Access-Control-Allow-Methods'] = '*';
     clientRequest.headers['Access-Control-Allow-Headers'] =

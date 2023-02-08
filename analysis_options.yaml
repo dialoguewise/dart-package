@@ -1,0 +1,6 @@
+include: package:lints/recommended.yaml
+
+# Exclude rules from the set of recommended lints.
+linter:
+  rules:
+    constant_identifier_names: false

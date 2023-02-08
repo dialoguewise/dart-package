@@ -4,13 +4,13 @@ import 'package:test/test.dart';
 
 void main() {
   test('call getdialogue API Endpoint', () async {
-    var request = new GetContentsRequest();
+    var request = GetContentsRequest();
     request.slug = 'hero-section';
     request.accessToken =
         'b1266377591c4f2a9494c3abdd2cac5381D6Z825D26CEBAE8B6rn';
 
     // Call the Dialoguewise API
-    var dialogueWiseService = new DialoguewiseService();
+    var dialogueWiseService = DialoguewiseService();
     Map res = await dialogueWiseService.getContents(request);
 
     expect(res['totalRecords'], equals(1));

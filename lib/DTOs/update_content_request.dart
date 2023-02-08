@@ -4,7 +4,7 @@ import 'package:dialogue_wise/models/content.dart';
 ///Creates a UpdateContentRequest payload that allows update of contents.
 class UpdateContentRequest extends DialoguewiseRequest {
   ///Sets the content that needs to be updated.
-  Content content = new Content();
+  Content content = Content();
 
   Map<String, dynamic> toJson() => {
         'slug': slug,

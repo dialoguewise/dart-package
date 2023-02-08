@@ -7,7 +7,7 @@ class DialoguewiseResponse {
   String reasonPhrase = '';
 
   ///Contains the response from Dialoguewise
-  Map response = new Map();
+  Map response = Map();
 
   Map<String, dynamic> toJson() => {
         'statusCode': statusCode,

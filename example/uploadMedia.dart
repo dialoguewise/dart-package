@@ -1,15 +1,16 @@
-import 'package:dialogue_wise/dialoguewise.dart';
-import 'package:dialogue_wise/DTOs/upload_media_request.dart';
 import 'dart:convert';
+
+import 'package:dialogue_wise/DTOs/upload_media_request.dart';
+import 'package:dialogue_wise/dialoguewise.dart';
 
 void main() async {
   //Prepare the payload
-  var request = new UploadMediaRequest();
+  var request = UploadMediaRequest();
   request.accessToken = '<Provide access token>';
   request.localFilePath = '<Provide local file path>';
 
   // Call the Dialoguewise API
-  var dialogueWiseService = new DialoguewiseService();
+  var dialogueWiseService = DialoguewiseService();
   var res = await dialogueWiseService.uploadMedia(request);
 
   //Print the Output to Console
