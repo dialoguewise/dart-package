@@ -134,7 +134,8 @@ class DialoguewiseService {
   ///Delete exisitng content.
   ///Takes [request] of type DeleteContentRequest.
   Future<DialoguewiseResponse> deleteContent(
-      DeleteContentRequest request) async {
+    DeleteContentRequest request,
+  ) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
     } else if (request.contentId.isEmpty) {
