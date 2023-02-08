@@ -15,7 +15,6 @@ class GetContentsRequest extends DialoguewiseRequest {
   bool? isPilot;
 
   Map<String, dynamic> toJson() => {
-        'accessToken': accessToken,
         'slug': slug,
         'IsPilotVersion': isPilot,
         'variables': variables,

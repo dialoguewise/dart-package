@@ -10,7 +10,6 @@ import 'package:dialogue_wise/models/field.dart';
 void main() async {
   var request = UpdateContentRequest();
   request.slug = '<Provide Slug>';
-  request.accessToken = '<Provide access token>';
 
   List<Field> fieldList = [];
   var field = Field();

@@ -6,7 +6,6 @@ import 'package:dialogue_wise/dialoguewise.dart';
 void main() async {
   //Prepare the payload
   var request = UploadMediaRequest();
-  request.accessToken = '<Provide access token>';
   request.localFilePath = '<Provide local file path>';
 
   // Call the Dialoguewise API

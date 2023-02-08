@@ -10,6 +10,5 @@ class UpdateContentRequest extends DialoguewiseRequest {
         'slug': slug,
         'source': source,
         'content': content,
-        'accessToken': accessToken,
       };
 }

@@ -7,7 +7,6 @@ void main() async {
   //Prepare the payload
   var request = GetVariablesRequest();
   request.slug = '<Provide Slug>';
-  request.accessToken = '<Provide access token>';
 
   // Call the Dialoguewise API
   final dialogueWiseService = DialoguewiseService(

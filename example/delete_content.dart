@@ -7,7 +7,6 @@ void main() async {
   //Prepare the payload
   var request = DeleteContentRequest();
   request.slug = '<Provide Slug>';
-  request.accessToken = '<Provide access token>';
 
   request.contentId = "<Provide content id>";
   request.source = '<Provide a source name>';

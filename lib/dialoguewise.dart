@@ -41,10 +41,6 @@ class DialoguewiseService {
   ///Gets all the published Dialogues in a project.
   ///Takes parameter [accessToken] of type String as access token.
   Future<DialoguewiseResponse> getDialogues(String accessToken) async {
-    if (accessToken.isEmpty) {
-      throw FormatException("Please provide the access token.");
-    }
-
     http.Request clientRequest =
         _getHeader(accessToken, 'dialogue/getDialogues', isGet: true);
 
@@ -54,14 +50,12 @@ class DialoguewiseService {
   ///Gets all the Variables of a published Dialogue.
   ///Takes parameter [request] of type GetVariablesRequest.
   Future<DialoguewiseResponse> getVariables(GetVariablesRequest request) async {
-    if (request.accessToken.isEmpty) {
-      throw FormatException("Please provide the access token.");
-    } else if (request.accessToken.isEmpty) {
+    if (request.slug.isEmpty) {
       throw FormatException("Please provide the Slug.");
     }
 
     http.Request clientRequest = _getHeader(
-        request.accessToken, 'dialogue/getVariables?slug=${request.slug}',
+        accessToken, 'dialogue/getVariables?slug=${request.slug}',
         isGet: true);
 
     return _getResponse(clientRequest);
@@ -72,15 +66,13 @@ class DialoguewiseService {
   Future<DialoguewiseResponse> getContents(GetContentsRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken.isEmpty) {
-      throw FormatException("Please provide the access token.");
     } else if ((request.pageSize == null && request.pageIndex != null) ||
         (request.pageSize != null && request.pageIndex == null)) {
       throw FormatException("Please set both pageSize and pageIndex");
     }
 
     http.Request clientRequest =
-        _getHeader(request.accessToken, 'dialogue/getContents');
+        _getHeader(accessToken, 'dialogue/getContents');
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -91,12 +83,10 @@ class DialoguewiseService {
   searchContents(SearchContentsRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken.isEmpty) {
-      throw FormatException("Please provide the access token.");
     }
 
     http.Request clientRequest =
-        _getHeader(request.accessToken, 'dialogue/searchContents');
+        _getHeader(accessToken, 'dialogue/searchContents');
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -107,8 +97,6 @@ class DialoguewiseService {
   Future<DialoguewiseResponse> addContents(AddContentsRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken.isEmpty) {
-      throw FormatException("Please provide the access token.");
     } else if (request.contents.isEmpty) {
       throw FormatException("Please provide the contents to be added.");
     } else if (request.source.isEmpty) {
@@ -116,7 +104,7 @@ class DialoguewiseService {
     }
 
     http.Request clientRequest =
-        _getHeader(request.accessToken, 'dialogue/addcontents');
+        _getHeader(accessToken, 'dialogue/addcontents');
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -128,8 +116,6 @@ class DialoguewiseService {
       UpdateContentRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken.isEmpty) {
-      throw FormatException("Please provide the access token.");
     } else if (request.content.fields.isEmpty) {
       throw FormatException("Please provide the contents to be added.");
     } else if (request.content.id == null || request.content.id!.isEmpty) {
@@ -139,7 +125,7 @@ class DialoguewiseService {
     }
 
     http.Request clientRequest =
-        _getHeader(request.accessToken, 'dialogue/updatecontent');
+        _getHeader(accessToken, 'dialogue/updatecontent');
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -151,8 +137,6 @@ class DialoguewiseService {
       DeleteContentRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
-    } else if (request.accessToken.isEmpty) {
-      throw FormatException("Please provide the access token.");
     } else if (request.contentId.isEmpty) {
       throw FormatException("Please provide the content id.");
     } else if (request.source.isEmpty) {
@@ -160,7 +144,7 @@ class DialoguewiseService {
     }
 
     http.Request clientRequest =
-        _getHeader(request.accessToken, 'dialogue/deletecontent');
+        _getHeader(accessToken, 'dialogue/deletecontent');
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -169,9 +153,7 @@ class DialoguewiseService {
   ///Uploads an image or file and returns the file URL.
   ///Takes [request] of type UploadMediaRequest.
   Future<DialoguewiseResponse> uploadMedia(UploadMediaRequest request) async {
-    if (request.accessToken.isEmpty) {
-      throw FormatException("Please provide the access token.");
-    } else if (request.localFilePath.isEmpty) {
+    if (request.localFilePath.isEmpty) {
       throw FormatException(
           "Please provide the local path of file to be uploaded.");
     } else if (FileSystemEntity.typeSync(request.localFilePath) ==
@@ -185,7 +167,7 @@ class DialoguewiseService {
       ..headers['Access-Control-Allow-origin'] = '*'
       ..headers['Access-Control-Allow-Methods'] = '*'
       ..headers['Access-Control-Allow-Headers'] = 'Content-Type, Access-Token'
-      ..headers['Access-Token'] = request.accessToken
+      ..headers['Access-Token'] = accessToken
       ..files.add(
           await http.MultipartFile.fromPath('file', request.localFilePath));
     var response = await httpRequest.send();

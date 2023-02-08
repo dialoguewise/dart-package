@@ -7,7 +7,6 @@ void main() async {
 //Prepare the payload
   var request = SearchContentsRequest();
   request.slug = '<Provide Slug>';
-  request.accessToken = '<Provide access token>';
   request.keyword = '<Provide search keyword>';
 
 // Call the Dialoguewise API
