@@ -1,3 +1,4 @@
+import 'package:dialogue_wise/DTOs/dialoguewise_response.dart';
 import 'package:dialogue_wise/DTOs/get_contents_request.dart';
 import 'package:dialogue_wise/dialoguewise.dart';
 import 'package:test/test.dart';
@@ -11,9 +12,10 @@ void main() {
 
     // Call the Dialoguewise API
     var dialogueWiseService = DialoguewiseService();
-    Map res = await dialogueWiseService.getContents(request);
+    final DialoguewiseResponse res =
+        await dialogueWiseService.getContents(request);
 
-    expect(res['totalRecords'], equals(1));
-    expect(res['error'], equals(''));
+    expect(res.response?['totalRecords'], equals(1));
+    expect(res.response?['error'], equals(''));
   });
 }

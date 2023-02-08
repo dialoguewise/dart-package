@@ -7,7 +7,28 @@ class DialoguewiseResponse {
   String reasonPhrase = '';
 
   ///Contains the response from Dialoguewise
-  Map response = Map();
+  Map<String, dynamic> response = <String, dynamic>{};
+
+  // Constructor
+  DialoguewiseResponse({
+    required this.statusCode,
+    required this.reasonPhrase,
+    this.response = const {},
+  });
+
+  // Copywith method
+
+  DialoguewiseResponse copyWith({
+    int? statusCode,
+    String? reasonPhrase,
+    Map<String, dynamic>? response,
+  }) {
+    return DialoguewiseResponse(
+      statusCode: statusCode ?? this.statusCode,
+      reasonPhrase: reasonPhrase ?? this.reasonPhrase,
+      response: response ?? this.response,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'statusCode': statusCode,

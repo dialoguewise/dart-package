@@ -22,7 +22,7 @@ class DialoguewiseService {
               : apiBaseUrl) +
           "api/";
     } else {
-      this._apiBaseUrl = '';
+      _apiBaseUrl = '';
     }
   }
 
@@ -36,7 +36,7 @@ class DialoguewiseService {
 
   ///Gets all the published Dialogues in a project.
   ///Takes parameter [accessToken] of type String as access token.
-  getDialogues(String accessToken) async {
+  Future<DialoguewiseResponse> getDialogues(String accessToken) async {
     if (accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
     }
@@ -49,7 +49,7 @@ class DialoguewiseService {
 
   ///Gets all the Variables of a published Dialogue.
   ///Takes parameter [request] of type GetVariablesRequest.
-  getVariables(GetVariablesRequest request) async {
+  Future<DialoguewiseResponse> getVariables(GetVariablesRequest request) async {
     if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
     } else if (request.accessToken.isEmpty) {
@@ -65,7 +65,7 @@ class DialoguewiseService {
 
   ///Gets all the contents in a dialogue.
   ///Takes parameter [request] of type GetContentsRequest.
-  getContents(GetContentsRequest request) async {
+  Future<DialoguewiseResponse> getContents(GetContentsRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
     } else if (request.accessToken.isEmpty) {
@@ -100,7 +100,7 @@ class DialoguewiseService {
 
   ///Adds content to a dialogue.
   ///Takes [request] of type AddContentsRequest.
-  addContents(AddContentsRequest request) async {
+  Future<DialoguewiseResponse> addContents(AddContentsRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
     } else if (request.accessToken.isEmpty) {
@@ -120,7 +120,8 @@ class DialoguewiseService {
 
   ///Update exisitng content.
   ///Takes [request] of type UpdateContentRequest.
-  updateContent(UpdateContentRequest request) async {
+  Future<DialoguewiseResponse> updateContent(
+      UpdateContentRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
     } else if (request.accessToken.isEmpty) {
@@ -142,7 +143,8 @@ class DialoguewiseService {
 
   ///Delete exisitng content.
   ///Takes [request] of type DeleteContentRequest.
-  deleteContent(DeleteContentRequest request) async {
+  Future<DialoguewiseResponse> deleteContent(
+      DeleteContentRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
     } else if (request.accessToken.isEmpty) {
@@ -162,7 +164,7 @@ class DialoguewiseService {
 
   ///Uploads an image or file and returns the file URL.
   ///Takes [request] of type UploadMediaRequest.
-  uploadMedia(UploadMediaRequest request) async {
+  Future<DialoguewiseResponse> uploadMedia(UploadMediaRequest request) async {
     if (request.accessToken.isEmpty) {
       throw FormatException("Please provide the access token.");
     } else if (request.localFilePath.isEmpty) {
@@ -183,40 +185,52 @@ class DialoguewiseService {
       ..files.add(
           await http.MultipartFile.fromPath('file', request.localFilePath));
     var response = await httpRequest.send();
-    var dialogueWiseResponse = DialoguewiseResponse();
-    dialogueWiseResponse.statusCode = response.statusCode;
-    dialogueWiseResponse.reasonPhrase = response.reasonPhrase!;
+    DialoguewiseResponse dialogueWiseResponse = DialoguewiseResponse(
+      reasonPhrase: response.reasonPhrase ?? 'Something went wrong.',
+      statusCode: response.statusCode,
+    );
     var responseBody = await response.stream.bytesToString();
     if (responseBody.isNotEmpty) {
-      dialogueWiseResponse.response = jsonDecode(responseBody) as Map;
+      dialogueWiseResponse = dialogueWiseResponse.copyWith(
+        response: jsonDecode(responseBody) as Map<String, dynamic>,
+      );
     }
 
     return dialogueWiseResponse;
   }
 
-  _getResponse(http.Request clientRequest) async {
+  Future<DialoguewiseResponse> _getResponse(http.Request clientRequest) async {
     http.Client httpClient = http.Client();
     http.StreamedResponse response = await httpClient.send(clientRequest);
     String responseBody = await response.stream.bytesToString();
     httpClient.close();
 
-    var dialogueWiseResponse = DialoguewiseResponse();
-    dialogueWiseResponse.statusCode = response.statusCode;
-    dialogueWiseResponse.reasonPhrase = response.reasonPhrase!;
+    DialoguewiseResponse dialogueWiseResponse = DialoguewiseResponse(
+      reasonPhrase: response.reasonPhrase ?? 'Something went wrong.',
+      statusCode: response.statusCode,
+    );
 
     if (responseBody.isNotEmpty) {
       try {
-        dialogueWiseResponse.response = jsonDecode(responseBody) as Map;
+        dialogueWiseResponse = dialogueWiseResponse.copyWith(
+          response: jsonDecode(responseBody) as Map<String, dynamic>,
+        );
       } catch (e) {
-        String errorResponse = "{\"error\":\"Invalid server response.\"}";
-        dialogueWiseResponse.response = jsonDecode(errorResponse) as Map;
+        final Map<String, dynamic> errorResponse = {
+          'error': 'Invalid server response.',
+        };
+        dialogueWiseResponse.response = errorResponse;
       }
     }
 
     return dialogueWiseResponse;
   }
 
-  _getHeader(String accessToken, String apiRoute, {bool isGet = false}) {
+  http.Request _getHeader(
+    String accessToken,
+    String apiRoute, {
+    bool isGet = false,
+  }) {
     var apiUrl = apiBaseUrl + apiRoute;
     http.Request clientRequest =
         http.Request(isGet ? 'GET' : 'POST', Uri.parse(apiUrl));
