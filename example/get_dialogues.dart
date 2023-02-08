@@ -7,7 +7,7 @@ void main() async {
   final dialogueWiseService = DialoguewiseService(
     accessToken: '<Provide access token>',
   );
-  var res = await dialogueWiseService.getDialogues('<Provide API Key>');
+  var res = await dialogueWiseService.getDialogues();
 
   //Print the Output to Console
   print(jsonEncode(res));

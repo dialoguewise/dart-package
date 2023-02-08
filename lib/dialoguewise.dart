@@ -41,7 +41,7 @@ class DialoguewiseService {
 
   ///Gets all the published Dialogues in a project.
   ///Takes parameter [accessToken] of type String as access token.
-  Future<DialoguewiseResponse> getDialogues(String accessToken) async {
+  Future<DialoguewiseResponse> getDialogues() async {
     http.Request clientRequest =
         _getHeader(accessToken, Endpoints.getDialogues, isGet: true);
 
