@@ -14,10 +14,14 @@ import 'package:http/http.dart' as http;
 ///Allows you to manage your content using Dialoguewise Headless CMS
 class DialoguewiseService {
   String _apiBaseUrl = '';
+  final String accessToken;
 
-  DialoguewiseService({String? apiBaseUrl}) {
+  DialoguewiseService({
+    String? apiBaseUrl,
+    required this.accessToken,
+  }) : assert(accessToken.isNotEmpty, "Please provide the access token.") {
     if (apiBaseUrl != null && apiBaseUrl.isNotEmpty) {
-      this._apiBaseUrl = (apiBaseUrl[apiBaseUrl.length - 1] != '/'
+      _apiBaseUrl = (apiBaseUrl[apiBaseUrl.length - 1] != '/'
               ? (apiBaseUrl + "/")
               : apiBaseUrl) +
           "api/";

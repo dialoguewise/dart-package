@@ -11,7 +11,9 @@ void main() async {
   request.keyword = '<Provide search keyword>';
 
 // Call the Dialoguewise API
-  var dialogueWiseService = DialoguewiseService();
+  final dialogueWiseService = DialoguewiseService(
+    accessToken: '<Provide access token>',
+  );
   var res = await dialogueWiseService.searchContents(request);
 
 //Print the Output to Console

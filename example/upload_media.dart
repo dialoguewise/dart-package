@@ -10,7 +10,9 @@ void main() async {
   request.localFilePath = '<Provide local file path>';
 
   // Call the Dialoguewise API
-  var dialogueWiseService = DialoguewiseService();
+  final dialogueWiseService = DialoguewiseService(
+    accessToken: '<Provide access token>',
+  );
   var res = await dialogueWiseService.uploadMedia(request);
 
   //Print the Output to Console

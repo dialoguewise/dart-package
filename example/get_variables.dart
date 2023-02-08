@@ -10,7 +10,9 @@ void main() async {
   request.accessToken = '<Provide access token>';
 
   // Call the Dialoguewise API
-  var dialogueWiseService = DialoguewiseService();
+  final dialogueWiseService = DialoguewiseService(
+    accessToken: '<Provide access token>',
+  );
   var res = await dialogueWiseService.getVariables(request);
 
   //Print the Output to Console

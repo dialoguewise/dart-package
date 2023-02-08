@@ -27,7 +27,9 @@ void main() async {
   content.metadata!.deviceType = Device.Mobile;
   request.content = content;
 
-  var dialogueWiseService = DialoguewiseService();
+  final dialogueWiseService = DialoguewiseService(
+    accessToken: '<Provide access token>',
+  );
   var res = await dialogueWiseService.updateContent(request);
 
 //Print the Output to Console

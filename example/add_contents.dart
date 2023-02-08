@@ -26,7 +26,9 @@ void main() async {
   contentList.add(content);
   request.contents = contentList;
 
-  var dialogueWiseService = DialoguewiseService();
+  final dialogueWiseService = DialoguewiseService(
+    accessToken: '<Provide access token>',
+  );
   var res = await dialogueWiseService.addContents(request);
 
 //Print the Output to Console

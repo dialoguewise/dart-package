@@ -1,4 +1,5 @@
 ///Creates a DialogueWiseResponse response object that would contain the response from Dialoguewise.
+
 class DialoguewiseResponse {
   ///Indicates the HTTP status code
   int statusCode = 0;
@@ -17,7 +18,6 @@ class DialoguewiseResponse {
   });
 
   // Copywith method
-
   DialoguewiseResponse copyWith({
     int? statusCode,
     String? reasonPhrase,

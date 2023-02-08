@@ -4,7 +4,9 @@ import 'package:dialogue_wise/dialoguewise.dart';
 
 void main() async {
   // Call the Dialoguewise API
-  var dialogueWiseService = DialoguewiseService();
+  final dialogueWiseService = DialoguewiseService(
+    accessToken: '<Provide access token>',
+  );
   var res = await dialogueWiseService.getDialogues('<Provide API Key>');
 
   //Print the Output to Console

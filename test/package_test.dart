@@ -11,11 +11,13 @@ void main() {
         'b1266377591c4f2a9494c3abdd2cac5381D6Z825D26CEBAE8B6rn';
 
     // Call the Dialoguewise API
-    var dialogueWiseService = DialoguewiseService();
+    final dialogueWiseService = DialoguewiseService(
+      accessToken: 'b1266377591c4f2a9494c3abdd2cac5381D6Z825D26CEBAE8B6rn',
+    );
     final DialoguewiseResponse res =
         await dialogueWiseService.getContents(request);
 
-    expect(res.response?['totalRecords'], equals(1));
-    expect(res.response?['error'], equals(''));
+    expect(res.response['totalRecords'], equals(1));
+    expect(res.response['error'], equals(''));
   });
 }

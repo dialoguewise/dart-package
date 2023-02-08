@@ -12,7 +12,9 @@ void main() async {
   request.contentId = "<Provide content id>";
   request.source = '<Provide a source name>';
 // Call the Dialoguewise API
-  var dialogueWiseService = DialoguewiseService();
+  final dialogueWiseService = DialoguewiseService(
+    accessToken: '<Provide access token>',
+  );
   var res = await dialogueWiseService.deleteContent(request);
 
 //Print the Output to Console
