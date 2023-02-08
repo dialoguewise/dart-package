@@ -15,13 +15,14 @@ import 'package:http/http.dart' as http;
 class DialoguewiseService {
   String _apiBaseUrl = '';
 
-  // ignore: avoid_init_to_null
-  DialoguewiseService({String? apiBaseUrl = null}) {
+  DialoguewiseService({String? apiBaseUrl}) {
     if (apiBaseUrl != null && apiBaseUrl.isNotEmpty) {
-      _apiBaseUrl =
-          "${apiBaseUrl[apiBaseUrl.length - 1] != '/' ? ("$apiBaseUrl/") : apiBaseUrl}api/";
+      this._apiBaseUrl = (apiBaseUrl[apiBaseUrl.length - 1] != '/'
+              ? (apiBaseUrl + "/")
+              : apiBaseUrl) +
+          "api/";
     } else {
-      _apiBaseUrl = '';
+      this._apiBaseUrl = '';
     }
   }
 
