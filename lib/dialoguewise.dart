@@ -9,6 +9,7 @@ import 'package:dialogue_wise/DTOs/get_variables_request.dart';
 import 'package:dialogue_wise/DTOs/search_contents_request.dart';
 import 'package:dialogue_wise/DTOs/update_content_request.dart';
 import 'package:dialogue_wise/DTOs/upload_media_request.dart';
+import 'package:dialogue_wise/constants/endpoints.dart';
 import 'package:http/http.dart' as http;
 
 ///Allows you to manage your content using Dialoguewise Headless CMS
@@ -42,7 +43,7 @@ class DialoguewiseService {
   ///Takes parameter [accessToken] of type String as access token.
   Future<DialoguewiseResponse> getDialogues(String accessToken) async {
     http.Request clientRequest =
-        _getHeader(accessToken, 'dialogue/getDialogues', isGet: true);
+        _getHeader(accessToken, Endpoints.getDialogues, isGet: true);
 
     return _getResponse(clientRequest);
   }
@@ -55,7 +56,7 @@ class DialoguewiseService {
     }
 
     http.Request clientRequest = _getHeader(
-        accessToken, 'dialogue/getVariables?slug=${request.slug}',
+        accessToken, '${Endpoints.getVariables}?slug=${request.slug}',
         isGet: true);
 
     return _getResponse(clientRequest);
@@ -71,8 +72,7 @@ class DialoguewiseService {
       throw FormatException("Please set both pageSize and pageIndex");
     }
 
-    http.Request clientRequest =
-        _getHeader(accessToken, 'dialogue/getContents');
+    http.Request clientRequest = _getHeader(accessToken, Endpoints.getContents);
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -80,13 +80,14 @@ class DialoguewiseService {
 
   ///Gets all the contents in a dialogue that matches the search keyword.
   ///Takes [request] of type SearchContentsRequest.
-  searchContents(SearchContentsRequest request) async {
+  Future<DialoguewiseResponse> searchContents(
+      SearchContentsRequest request) async {
     if (request.slug.isEmpty) {
       throw FormatException("Please provide a Slug.");
     }
 
     http.Request clientRequest =
-        _getHeader(accessToken, 'dialogue/searchContents');
+        _getHeader(accessToken, Endpoints.searchContents);
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -103,8 +104,7 @@ class DialoguewiseService {
       throw FormatException("Please provide a source name.");
     }
 
-    http.Request clientRequest =
-        _getHeader(accessToken, 'dialogue/addcontents');
+    http.Request clientRequest = _getHeader(accessToken, Endpoints.addContents);
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -125,7 +125,7 @@ class DialoguewiseService {
     }
 
     http.Request clientRequest =
-        _getHeader(accessToken, 'dialogue/updatecontent');
+        _getHeader(accessToken, Endpoints.updateContent);
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
@@ -144,7 +144,7 @@ class DialoguewiseService {
     }
 
     http.Request clientRequest =
-        _getHeader(accessToken, 'dialogue/deletecontent');
+        _getHeader(accessToken, Endpoints.deleteContent);
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);
