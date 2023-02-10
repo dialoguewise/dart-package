@@ -41,6 +41,15 @@ class DialoguewiseService {
 
   ///Gets all the published Dialogues in a project.
   ///Takes parameter [accessToken] of type String as access token.
+  ///Returns a [DialoguewiseResponse] object.
+  ///Throws [FormatException] if the access token is empty.
+  /// Example:
+  /// ```dart
+  /// final dialogueWiseService = DialoguewiseService(
+  ///   accessToken: '<Provide access token>',
+  /// );
+  ///
+  /// final res = await dialogueWiseService.getDialogues();
   Future<DialoguewiseResponse> getDialogues() async {
     http.Request clientRequest =
         _getHeader(accessToken, Endpoints.getDialogues, isGet: true);
