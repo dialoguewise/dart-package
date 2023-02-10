@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dialogue_wise/DTOs/add_contents_request.dart';
 import 'package:dialogue_wise/DTOs/delete_content_request.dart';
@@ -11,6 +10,7 @@ import 'package:dialogue_wise/DTOs/update_content_request.dart';
 import 'package:dialogue_wise/DTOs/upload_media_request.dart';
 import 'package:dialogue_wise/constants/endpoints.dart';
 import 'package:http/http.dart' as http;
+import 'package:universal_io/io.dart';
 
 ///Allows you to manage your content using Dialoguewise Headless CMS
 class DialoguewiseService {
@@ -56,8 +56,10 @@ class DialoguewiseService {
     }
 
     http.Request clientRequest = _getHeader(
-        accessToken, '${Endpoints.getVariables}?slug=${request.slug}',
-        isGet: true);
+      accessToken,
+      '${Endpoints.getVariables}?slug=${request.slug}',
+      isGet: true,
+    );
 
     return _getResponse(clientRequest);
   }
