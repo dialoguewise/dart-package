@@ -183,8 +183,8 @@ class DialoguewiseService {
       ..headers['Access-Token'] = accessToken
       ..files.add(
         request.localFilePath.isNotEmpty
-            ? http.MultipartFile.fromString('file', request.localFilePath)
-            : http.MultipartFile.fromString('file', request.fileData),
+            ? await http.MultipartFile.fromPath('file', request.localFilePath)
+            : http.MultipartFile.fromBytes('file', request.fileData),
       );
     var response = await httpRequest.send();
     DialoguewiseResponse dialogueWiseResponse = DialoguewiseResponse(
