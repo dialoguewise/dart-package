@@ -168,8 +168,9 @@ class DialoguewiseService {
     if (request.localFilePath.isEmpty) {
       throw FormatException(
           "Please provide the local path of file to be uploaded.");
-    } else if (FileSystemEntity.typeSync(request.localFilePath) ==
-        FileSystemEntityType.notFound) {
+    } else if ((Platform.isAndroid || Platform.isIOS) &&
+        FileSystemEntity.typeSync(request.localFilePath) ==
+            FileSystemEntityType.notFound) {
       throw FormatException("Unable to find file ${request.localFilePath}.");
     }
 
@@ -181,7 +182,10 @@ class DialoguewiseService {
       ..headers['Access-Control-Allow-Headers'] = 'Content-Type, Access-Token'
       ..headers['Access-Token'] = accessToken
       ..files.add(
-          await http.MultipartFile.fromPath('file', request.localFilePath));
+        request.localFilePath.isNotEmpty
+            ? http.MultipartFile.fromString('file', request.localFilePath)
+            : http.MultipartFile.fromString('file', request.fileData),
+      );
     var response = await httpRequest.send();
     DialoguewiseResponse dialogueWiseResponse = DialoguewiseResponse(
       reasonPhrase: response.reasonPhrase ?? 'Something went wrong.',

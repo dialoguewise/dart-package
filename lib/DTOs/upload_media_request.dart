@@ -4,4 +4,5 @@ import 'package:dialogue_wise/DTOs/dialoguewise_request.dart';
 class UploadMediaRequest extends DialoguewiseRequest {
   ///Sets the path to the file on local device that needs to be uploaded.
   String localFilePath = '';
+  String fileData = '';
 }
