@@ -165,7 +165,7 @@ class DialoguewiseService {
   ///Uploads an image or file and returns the file URL.
   ///Takes [request] of type UploadMediaRequest.
   Future<DialoguewiseResponse> uploadMedia(UploadMediaRequest request) async {
-    if (request.localFilePath.isEmpty) {
+    if (request.localFilePath.isEmpty || request.localFilePath.isEmpty) {
       throw FormatException(
           "Please provide the local path of file to be uploaded.");
     } else if ((Platform.isAndroid || Platform.isIOS) &&
