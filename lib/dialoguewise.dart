@@ -10,6 +10,7 @@ import 'package:dialogue_wise/DTOs/update_content_request.dart';
 import 'package:dialogue_wise/DTOs/upload_media_request.dart';
 import 'package:dialogue_wise/constants/endpoints.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:universal_io/io.dart';
 
 ///Allows you to manage your content using Dialoguewise Headless CMS
@@ -165,7 +166,7 @@ class DialoguewiseService {
   ///Uploads an image or file and returns the file URL.
   ///Takes [request] of type UploadMediaRequest.
   Future<DialoguewiseResponse> uploadMedia(UploadMediaRequest request) async {
-    if (request.localFilePath.isEmpty || request.fileData.isEmpty) {
+    if (request.localFilePath.isEmpty && request.fileData.isEmpty) {
       throw FormatException(
           "Please provide the local path of file to be uploaded.");
     } else if ((Platform.isAndroid || Platform.isIOS) &&
@@ -174,17 +175,36 @@ class DialoguewiseService {
       throw FormatException("Unable to find file ${request.localFilePath}.");
     }
 
+    if (request.fileData.isEmpty && request.mimeType.isEmpty) {
+      throw FormatException("Please provide the mime type of the file.");
+    }
+
     var apiUrl = '${apiBaseUrl}dialogue/uploadmedia';
     var uri = Uri.parse(apiUrl);
+
+    final fileName = request.localFilePath.isNotEmpty
+        ? request.localFilePath.split('/').last
+        : 'image.png';
+
+    List<String> mediaType = request.mimeType.split('/');
+
     var httpRequest = http.MultipartRequest('POST', uri)
       ..headers['Access-Control-Allow-origin'] = '*'
       ..headers['Access-Control-Allow-Methods'] = '*'
       ..headers['Access-Control-Allow-Headers'] = 'Content-Type, Access-Token'
       ..headers['Access-Token'] = accessToken
       ..files.add(
-        request.localFilePath.isNotEmpty
-            ? await http.MultipartFile.fromPath('file', request.localFilePath)
-            : http.MultipartFile.fromBytes('file', request.fileData),
+        request.fileData.isNotEmpty
+            ? http.MultipartFile.fromBytes(
+                'file',
+                request.fileData,
+                filename: '$fileName.${mediaType.last}',
+                contentType: MediaType(mediaType.first, mediaType.last),
+              )
+            : await http.MultipartFile.fromPath(
+                'file',
+                request.localFilePath,
+              ),
       );
     var response = await httpRequest.send();
     DialoguewiseResponse dialogueWiseResponse = DialoguewiseResponse(
