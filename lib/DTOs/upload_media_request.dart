@@ -1,9 +1,13 @@
 import 'package:dialogue_wise/DTOs/dialoguewise_request.dart';
 
-///Creates a UploadMediaRequest payload uploads a media file.
+///Creates a UploadMediaRequest payload uploads a media file.\
+///[fileName] is the name of the file and is optional
+///[mimeType] is the mime type of the file.
+///[fileData] is the file data in bytes.
 class UploadMediaRequest extends DialoguewiseRequest {
-  ///Sets the path to the file on local device that needs to be uploaded.
-  String localFilePath = '';
+  String? fileName;
+
   String mimeType = '';
+
   List<int> fileData = [];
 }

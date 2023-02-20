@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dialogue_wise/DTOs/add_contents_request.dart';
 import 'package:dialogue_wise/DTOs/delete_content_request.dart';
@@ -8,10 +9,10 @@ import 'package:dialogue_wise/DTOs/get_variables_request.dart';
 import 'package:dialogue_wise/DTOs/search_contents_request.dart';
 import 'package:dialogue_wise/DTOs/update_content_request.dart';
 import 'package:dialogue_wise/DTOs/upload_media_request.dart';
+import 'package:dialogue_wise/DTOs/upload_media_with_path.dart';
 import 'package:dialogue_wise/constants/endpoints.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:universal_io/io.dart';
 
 ///Allows you to manage your content using Dialoguewise Headless CMS
 class DialoguewiseService {
@@ -23,10 +24,8 @@ class DialoguewiseService {
     required this.accessToken,
   }) : assert(accessToken.isNotEmpty, "Please provide the access token.") {
     if (apiBaseUrl != null && apiBaseUrl.isNotEmpty) {
-      _apiBaseUrl = (apiBaseUrl[apiBaseUrl.length - 1] != '/'
-              ? (apiBaseUrl + "/")
-              : apiBaseUrl) +
-          "api/";
+      _apiBaseUrl =
+          "${apiBaseUrl[apiBaseUrl.length - 1] != '/' ? '$apiBaseUrl/' : apiBaseUrl}api/";
     } else {
       _apiBaseUrl = '';
     }
@@ -163,50 +162,84 @@ class DialoguewiseService {
     return _getResponse(clientRequest);
   }
 
-  ///Uploads an image or file and returns the file URL.
-  ///Takes [request] of type UploadMediaRequest.
-  Future<DialoguewiseResponse> uploadMedia(UploadMediaRequest request) async {
-    if (request.localFilePath.isEmpty && request.fileData.isEmpty) {
+  /// Uploads an image or file given file path and returns the file URL.
+  /// Takes [request] of type UploadMediaRequest, this request contains the
+  /// file path and file name.
+  /// Throws [FormatException] if the file path is empty.
+  /// Throws [FormatException] if the file does not exist.
+  ///
+  /// This is only supported on mobile platforms.
+  Future<DialoguewiseResponse> uploadMediaByPath(
+      UploadMediaWithPath request) async {
+    if (request.filePath.isEmpty) {
       throw FormatException(
           "Please provide the local path of file to be uploaded.");
-    } else if ((Platform.isAndroid || Platform.isIOS) &&
-        FileSystemEntity.typeSync(request.localFilePath) ==
-            FileSystemEntityType.notFound) {
-      throw FormatException("Unable to find file ${request.localFilePath}.");
+    } else if (FileSystemEntity.typeSync(request.filePath) ==
+        FileSystemEntityType.notFound) {
+      throw FormatException("Unable to find file ${request.filePath}.");
     }
 
-    if (request.fileData.isEmpty && request.mimeType.isEmpty) {
-      throw FormatException("Please provide the mime type of the file.");
+    final apiUrl = '$apiBaseUrl${Endpoints.uploadMedia}';
+    final uri = Uri.parse(apiUrl);
+    final httpRequest = http.MultipartRequest('POST', uri)
+      ..headers['Access-Control-Allow-origin'] = '*'
+      ..headers['Access-Control-Allow-Methods'] = '*'
+      ..headers['Access-Control-Allow-Headers'] = 'Content-Type, Access-Token'
+      ..headers['Access-Token'] = accessToken
+      ..files.add(await http.MultipartFile.fromPath('file', request.filePath));
+    final response = await httpRequest.send();
+
+    var dialogueWiseResponse = DialoguewiseResponse(
+      statusCode: response.statusCode,
+      reasonPhrase: response.reasonPhrase ?? 'Something went wrong',
+    );
+
+    final responseBody = await response.stream.bytesToString();
+
+    if (responseBody.isNotEmpty) {
+      dialogueWiseResponse.response =
+          jsonDecode(responseBody) as Map<String, dynamic>;
     }
 
-    var apiUrl = '${apiBaseUrl}dialogue/uploadmedia';
-    var uri = Uri.parse(apiUrl);
+    return dialogueWiseResponse;
+  }
 
-    final fileName = request.localFilePath.isNotEmpty
-        ? request.localFilePath.split('/').last
-        : 'image.png';
+  ///Uploads an image or file and returns the file URL.
+  ///Takes [request] of type UploadMediaRequest, this request contains the
+  ///file data, mime type and file name.
+  ///Throws [FormatException] if the file data is empty.
+  ///Throws [FormatException] if the mime type is empty.
+  Future<DialoguewiseResponse> uploadMedia(UploadMediaRequest request) async {
+    if (request.fileData.isEmpty) {
+      throw FormatException('Please provide the file data.');
+    }
+    if (request.mimeType.isEmpty) {
+      throw FormatException('Please provide the mime type of the file.');
+    }
 
-    List<String> mediaType = request.mimeType.split('/');
+    final apiUrl = '$apiBaseUrl${Endpoints.uploadMedia}';
+    final uri = Uri.parse(apiUrl);
 
-    var httpRequest = http.MultipartRequest('POST', uri)
+    final List<String> mediaType = request.mimeType.split('/');
+
+    final fileName = request.fileName ??
+        '${DateTime.now().millisecondsSinceEpoch.toString()}.${mediaType.last}';
+
+    final httpRequest = http.MultipartRequest('POST', uri)
       ..headers['Access-Control-Allow-origin'] = '*'
       ..headers['Access-Control-Allow-Methods'] = '*'
       ..headers['Access-Control-Allow-Headers'] = 'Content-Type, Access-Token'
       ..headers['Access-Token'] = accessToken
       ..files.add(
-        request.fileData.isNotEmpty
-            ? http.MultipartFile.fromBytes(
-                'file',
-                request.fileData,
-                filename: '$fileName.${mediaType.last}',
-                contentType: MediaType(mediaType.first, mediaType.last),
-              )
-            : await http.MultipartFile.fromPath(
-                'file',
-                request.localFilePath,
-              ),
+        http.MultipartFile.fromBytes(
+          'file',
+          request.fileData,
+          filename: fileName,
+          contentType: MediaType(mediaType.first, mediaType.last),
+        ),
       );
-    var response = await httpRequest.send();
+
+    final http.StreamedResponse response = await httpRequest.send();
     DialoguewiseResponse dialogueWiseResponse = DialoguewiseResponse(
       reasonPhrase: response.reasonPhrase ?? 'Something went wrong.',
       statusCode: response.statusCode,
