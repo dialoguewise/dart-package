@@ -5,12 +5,13 @@ import 'package:dialogue_wise/dialoguewise.dart';
 
 void main() async {
   //Prepare the payload
-  var request = new GetVariablesRequest();
+  var request = GetVariablesRequest();
   request.slug = '<Provide Slug>';
-  request.accessToken = '<Provide access token>';
 
   // Call the Dialoguewise API
-  var dialogueWiseService = new DialoguewiseService();
+  final dialogueWiseService = DialoguewiseService(
+    accessToken: '<Provide access token>',
+  );
   var res = await dialogueWiseService.getVariables(request);
 
   //Print the Output to Console

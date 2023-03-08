@@ -9,6 +9,5 @@ class DeleteContentRequest extends DialoguewiseRequest {
         'slug': slug,
         'source': source,
         'contentId': contentId,
-        'accessToken': accessToken,
       };
 }

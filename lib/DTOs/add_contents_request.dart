@@ -10,6 +10,5 @@ class AddContentsRequest extends DialoguewiseRequest {
         'slug': slug,
         'source': source,
         'contents': contents,
-        'accessToken': accessToken,
       };
 }

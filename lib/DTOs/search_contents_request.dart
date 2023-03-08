@@ -12,7 +12,6 @@ class SearchContentsRequest extends DialoguewiseRequest {
   bool? isPilot;
 
   Map<String, dynamic> toJson() => {
-        'accessToken': accessToken,
         'slug': slug,
         'keyword': keyword,
         'IsPilotVersion': isPilot,

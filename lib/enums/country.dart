@@ -1,4 +1,5 @@
 ///Country enums that can be used whenever a location needs to be set.
+
 enum Country {
   Any,
   Afghanistan,
