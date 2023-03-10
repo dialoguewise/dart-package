@@ -1,3 +1,7 @@
+# 3.0.2
+
+- Added support for dart web and refactored for easier integration.
+
 # 3.0.1
 
 - Supports dart version 2.12.0 and above and fixed analytics issues.

@@ -8,8 +8,6 @@ import 'package:dialogue_wise/DTOs/get_contents_request.dart';
 import 'package:dialogue_wise/DTOs/get_variables_request.dart';
 import 'package:dialogue_wise/DTOs/search_contents_request.dart';
 import 'package:dialogue_wise/DTOs/update_content_request.dart';
-import 'package:dialogue_wise/DTOs/upload_media_request.dart';
-import 'package:dialogue_wise/DTOs/upload_media_with_path.dart';
 import 'package:dialogue_wise/constants/endpoints.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -40,9 +38,7 @@ class DialoguewiseService {
   }
 
   ///Gets all the published Dialogues in a project.
-  ///Takes parameter [accessToken] of type String as access token.
   ///Returns a [DialoguewiseResponse] object.
-  ///Throws [FormatException] if the access token is empty.
   /// Example:
   /// ```dart
   /// final dialogueWiseService = DialoguewiseService(
@@ -61,7 +57,7 @@ class DialoguewiseService {
   ///Takes parameter [request] of type GetVariablesRequest.
   Future<DialoguewiseResponse> getVariables(GetVariablesRequest request) async {
     if (request.slug.isEmpty) {
-      throw FormatException("Please provide the Slug.");
+      throw ArgumentError("Please provide the Slug.");
     }
 
     http.Request clientRequest = _getHeader(
@@ -77,10 +73,10 @@ class DialoguewiseService {
   ///Takes parameter [request] of type GetContentsRequest.
   Future<DialoguewiseResponse> getContents(GetContentsRequest request) async {
     if (request.slug.isEmpty) {
-      throw FormatException("Please provide a Slug.");
+      throw ArgumentError("Please provide a Slug.");
     } else if ((request.pageSize == null && request.pageIndex != null) ||
         (request.pageSize != null && request.pageIndex == null)) {
-      throw FormatException("Please set both pageSize and pageIndex");
+      throw ArgumentError("Please set both pageSize and pageIndex");
     }
 
     http.Request clientRequest = _getHeader(accessToken, Endpoints.getContents);
@@ -94,7 +90,7 @@ class DialoguewiseService {
   Future<DialoguewiseResponse> searchContents(
       SearchContentsRequest request) async {
     if (request.slug.isEmpty) {
-      throw FormatException("Please provide a Slug.");
+      throw ArgumentError("Please provide a Slug.");
     }
 
     http.Request clientRequest =
@@ -108,11 +104,11 @@ class DialoguewiseService {
   ///Takes [request] of type AddContentsRequest.
   Future<DialoguewiseResponse> addContents(AddContentsRequest request) async {
     if (request.slug.isEmpty) {
-      throw FormatException("Please provide a Slug.");
+      throw ArgumentError("Please provide a Slug.");
     } else if (request.contents.isEmpty) {
-      throw FormatException("Please provide the contents to be added.");
+      throw ArgumentError("Please provide the contents to be added.");
     } else if (request.source.isEmpty) {
-      throw FormatException("Please provide a source name.");
+      throw ArgumentError("Please provide a source name.");
     }
 
     http.Request clientRequest = _getHeader(accessToken, Endpoints.addContents);
@@ -126,13 +122,13 @@ class DialoguewiseService {
   Future<DialoguewiseResponse> updateContent(
       UpdateContentRequest request) async {
     if (request.slug.isEmpty) {
-      throw FormatException("Please provide a Slug.");
+      throw ArgumentError("Please provide a Slug.");
     } else if (request.content.fields.isEmpty) {
-      throw FormatException("Please provide the contents to be added.");
+      throw ArgumentError("Please provide the contents to be added.");
     } else if (request.content.id == null || request.content.id!.isEmpty) {
-      throw FormatException("Please provide content id.");
+      throw ArgumentError("Please provide content id.");
     } else if (request.source.isEmpty) {
-      throw FormatException("Please provide a source name.");
+      throw ArgumentError("Please provide a source name.");
     }
 
     http.Request clientRequest =
@@ -148,11 +144,11 @@ class DialoguewiseService {
     DeleteContentRequest request,
   ) async {
     if (request.slug.isEmpty) {
-      throw FormatException("Please provide a Slug.");
+      throw ArgumentError("Please provide a Slug.");
     } else if (request.contentId.isEmpty) {
-      throw FormatException("Please provide the content id.");
+      throw ArgumentError("Please provide the content id.");
     } else if (request.source.isEmpty) {
-      throw FormatException("Please provide a source name.");
+      throw ArgumentError("Please provide a source name.");
     }
 
     http.Request clientRequest =
@@ -162,21 +158,19 @@ class DialoguewiseService {
     return _getResponse(clientRequest);
   }
 
-  /// Uploads an image or file given file path and returns the file URL.
-  /// Takes [request] of type UploadMediaRequest, this request contains the
-  /// file path and file name.
-  /// Throws [FormatException] if the file path is empty.
-  /// Throws [FormatException] if the file does not exist.
+  /// Uploads an image or file given file path and returns the URL of uploaded file.
+  /// Takes [filePath] which is the path to the local file.
+  /// Throws [ArgumentError] if the file path is empty.
+  /// Throws [FileSystemException] if the file does not exist.
   ///
   /// This is only supported on mobile platforms.
-  Future<DialoguewiseResponse> uploadMediaByPath(
-      UploadMediaWithPath request) async {
-    if (request.filePath.isEmpty) {
-      throw FormatException(
+  Future<DialoguewiseResponse> uploadMediaByPath(String filePath) async {
+    if (filePath.isEmpty) {
+      throw ArgumentError(
           "Please provide the local path of file to be uploaded.");
-    } else if (FileSystemEntity.typeSync(request.filePath) ==
+    } else if (FileSystemEntity.typeSync(filePath) ==
         FileSystemEntityType.notFound) {
-      throw FormatException("Unable to find file ${request.filePath}.");
+      throw FileSystemException("Unable to find file $filePath.");
     }
 
     final apiUrl = '$apiBaseUrl${Endpoints.uploadMedia}';
@@ -186,7 +180,7 @@ class DialoguewiseService {
       ..headers['Access-Control-Allow-Methods'] = '*'
       ..headers['Access-Control-Allow-Headers'] = 'Content-Type, Access-Token'
       ..headers['Access-Token'] = accessToken
-      ..files.add(await http.MultipartFile.fromPath('file', request.filePath));
+      ..files.add(await http.MultipartFile.fromPath('file', filePath));
     final response = await httpRequest.send();
 
     var dialogueWiseResponse = DialoguewiseResponse(
@@ -205,25 +199,27 @@ class DialoguewiseService {
   }
 
   ///Uploads an image or file and returns the file URL.
-  ///Takes [request] of type UploadMediaRequest, this request contains the
-  ///file data, mime type and file name.
-  ///Throws [FormatException] if the file data is empty.
-  ///Throws [FormatException] if the mime type is empty.
-  Future<DialoguewiseResponse> uploadMedia(UploadMediaRequest request) async {
-    if (request.fileData.isEmpty) {
-      throw FormatException('Please provide the file data.');
+  ///Takes [fileName] as the name of the file.
+  ///Takes [fileData] as the file binary data.
+  ///Takes [mimeType] as the mime type.
+  ///Throws [ArgumentError] if the file data is empty.
+  ///Throws [ArgumentError] if the mime type is empty.
+  Future<DialoguewiseResponse> uploadMedia(
+      String fileName, List<int> fileData, String mimeType) async {
+    if (fileData.isEmpty) {
+      throw ArgumentError('Please provide the file data.');
     }
-    if (request.mimeType.isEmpty) {
-      throw FormatException('Please provide the mime type of the file.');
+    if (mimeType.isEmpty) {
+      throw ArgumentError('Please provide the mime type of the file.');
+    }
+    if (fileName.isEmpty) {
+      throw ArgumentError('Please provide a filename.');
     }
 
     final apiUrl = '$apiBaseUrl${Endpoints.uploadMedia}';
     final uri = Uri.parse(apiUrl);
 
-    final List<String> mediaType = request.mimeType.split('/');
-
-    final fileName = request.fileName ??
-        '${DateTime.now().millisecondsSinceEpoch.toString()}.${mediaType.last}';
+    final List<String> mediaType = mimeType.split('/');
 
     final httpRequest = http.MultipartRequest('POST', uri)
       ..headers['Access-Control-Allow-origin'] = '*'
@@ -233,7 +229,7 @@ class DialoguewiseService {
       ..files.add(
         http.MultipartFile.fromBytes(
           'file',
-          request.fileData,
+          fileData,
           filename: fileName,
           contentType: MediaType(mediaType.first, mediaType.last),
         ),
