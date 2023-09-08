@@ -12,6 +12,8 @@ import 'package:dialogue_wise/constants/endpoints.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
+import 'DTOs/email_request.dart';
+
 ///Allows you to manage your content using Dialoguewise Headless CMS
 class DialoguewiseService {
   String _apiBaseUrl = '';
@@ -153,6 +155,31 @@ class DialoguewiseService {
 
     http.Request clientRequest =
         _getHeader(accessToken, Endpoints.deleteContent);
+    clientRequest.body = jsonEncode(request);
+
+    return _getResponse(clientRequest);
+  }
+
+  ///Allows you to send an email.
+  ///Takes [request] of type EmailRequest.
+  Future<DialoguewiseResponse> sendEmail(
+    EmailRequest request,
+  ) async {
+    if (request.from.isEmpty) {
+      throw ArgumentError(
+          "Please specify the sender's email address in the 'from' field.");
+    } else if (request.subject.isEmpty) {
+      throw ArgumentError("Please provide a subject.");
+    } else if (request.body.isEmpty) {
+      throw ArgumentError("Please provide the email content in 'body' field.");
+    } else if (request.to.isEmpty &&
+        request.cc.isEmpty &&
+        request.bcc.isEmpty) {
+      throw ArgumentError(
+          "Please provide at least one recipient email address.");
+    }
+
+    http.Request clientRequest = _getHeader(accessToken, Endpoints.sendEmail);
     clientRequest.body = jsonEncode(request);
 
     return _getResponse(clientRequest);

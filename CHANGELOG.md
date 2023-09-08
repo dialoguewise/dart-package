@@ -1,3 +1,7 @@
+# 3.1.0
+
+- Added support for sending emails: `sendEmail`
+
 # 3.0.2
 
 - Added support for dart web and refactored for easier integration.

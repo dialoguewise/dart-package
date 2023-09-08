@@ -7,4 +7,5 @@ abstract class Endpoints {
   static const String updateContent = 'dialogue/updatecontent';
   static const String deleteContent = 'dialogue/deletecontent';
   static const String uploadMedia = 'dialogue/uploadmedia';
+  static const String sendEmail = 'email/sendemail';
 }
